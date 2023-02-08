@@ -1,0 +1,60 @@
+{% load crispy_forms_tags %}
+
+<head>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+          crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.js">
+    </script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js">
+    </script>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap-tab.js"></script>
+
+
+
+
+</head>
+
+<body>
+
+
+<link href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+
+
+<div class="row p-5">
+<table
+        class="table-striped"
+  id="table"
+  data-toggle="table"
+  data-sort-name="date_recouvrement"
+  data-sort-order="asc"
+  data-url="http://127.0.0.1:8000/factures/liste/api/?date=2023-01-15">
+
+  <thead>
+    <tr>
+        <th data-field="date_recouvrement">Date recouvrement</th>
+      <th data-field="facture2">Facture</th>
+      <th data-field="montant" data-align="right">Montant</th>
+        <th data-field="cumul" data-align="right">Cumul</th>
+
+
+    </tr>
+
+  </thead>
+</table>
+</div>
+
+</body>
+
+

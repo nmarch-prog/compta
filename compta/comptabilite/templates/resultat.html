@@ -1,0 +1,22 @@
+Ca marche <br>
+{{ date_debut }} <br>
+{{ date_fin }} <br>
+
+<table>
+    <tr>
+        <th>Categorie</th>
+        <td>Credit</td>
+        <td>Debit</td>
+    </tr>
+
+    {% for k, v in categories.items %}
+    <tr>
+        <th>{{k}}</th>
+        <td>{{v.0}}</td>
+        <td>{{v.1}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+Resultat: {{resultat}}

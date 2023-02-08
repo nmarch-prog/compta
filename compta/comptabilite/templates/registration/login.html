@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <table>{{form.as_table}}</table>
+        <P></P>
+        <button type="submit">Connexion</button>
+    </form>
+
+</table>
+
+{% endblock content %}

@@ -1,0 +1,19 @@
+<h2>Nouvelle facture simple</h2>
+
+{% load crispy_forms_tags %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+
+
+
+                        {% crispy facture_simple_form %}
+                        {% crispy echeance_simple_form %}
+
+
+
+                             <button type="submit">Sauver</button>
+
+
+  </form>

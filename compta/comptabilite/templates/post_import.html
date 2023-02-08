@@ -1,0 +1,26 @@
+{% if doublons %}
+
+Les lignes suivantes sont en double et n'ont pas été importées: <br>
+
+{% for d in doublons %}
+
+{{d}} <br>
+
+{% endfor %}
+
+{% endif %}
+
+<hr>
+
+{% if manquantes %}
+
+Le fichier n'a pas pu être importé car les champs suivants manquent: <br>
+
+{% for c in manquantes %}
+
+{{c}} <br>
+
+{% endfor %}
+
+{% endif %}
+

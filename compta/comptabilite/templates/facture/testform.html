@@ -1,0 +1,53 @@
+{% load crispy_forms_tags %}
+
+<head>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+          crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+
+    <script src="http://code.jquery.com/jquery-1.9.1.js">
+    </script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js">
+    </script>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap-tab.js"></script>
+
+
+
+
+</head>
+
+<body>
+
+<p class="container ms-5">
+
+<div class="row ms-5"><h2>Nouvelle facture</h2></div>
+
+
+
+<div class="row ms-5">Saisie d'une nouvelle facture ou d'un échéancier.</div>
+<div class="row ms-5">Si c'est une facture simple, un élément comptable associé est généré, et donc la catégorie doit
+    être renseignée.</div>
+<div class="row ms-5">Si c'est un échéancier, aucun élément comptable ne sera généré, la comptabilité se fait à partie
+    des écritures des comptes bancaires.</div>
+<div class="row ms-5">En cas de commission apporteur ou commercial, les échéances correspondant aux commissions
+    sont générées.</div>
+<div class="row ms-5">La checkbox facture future correspond à une facture "virtuelle", par exemple non reçue ou pour
+    simuler. Aucun élément comptable n'est généré.</div>
+
+    {% csrf_token %}
+    <div class="row p-5">{% crispy form %}</div>
+
+</div>
+
+
+</body>
+
+

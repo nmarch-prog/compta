@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AFPI 78</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+</head>
+<body>
+
+    <div >
+
+
+        <div class="col-container", id="bandeau">
+            <div class="col" style="width:70%"><h1>AFPI 78 CRM</h1></div>
+            <div class="col">
+        {% if user.is_authenticated %}
+        <p>{{ user.username }}</p>
+        <p><a href="{%url 'logout' %}">Deconnexion</a></p>
+        {% else %}
+        <a href="{%url 'login' %}">Connexion</a>
+        {% endif %}
+                </div>
+
+        </div>
+
+        {% if user.is_authenticated %}
+
+        <div class="col-container">
+
+            <div class="col", id="topmenu"> <a href="{%url 'apporteurs:toutes_actions' %}">Apporteurs</a></div>
+            <div class="col" id="topmenu">Contacts</div>
+            <div class="col" id="topmenu">Suivi des clients</div>
+            <div class="col" id="topmenu">{{user.collaborateur.droit_comptabilite}}</div>
+            {% if user.collaborateur.droit_comptabilite %}
+            <div class="col" id="topmenu">Comptabilite</div>
+            {% endif %}
+            {% if user.is_superuser or user.collaborateur.droit_gestion_utilisateurs %}
+            <div class="col" id="topmenu"><a href="{%url 'utilisateurs:liste' %}">Gestion des utilisateurs</a></div>
+            {% endif %}
+
+
+        </div>
+
+        {% endif %}
+
+
+
+    </div>
+
+
+
+
+
+
+</div>
+
+
+<div class="col-container">
+
+    <div class="col">
+        {% block menu %}
+        {% endblock menu %}
+    </div>
+
+
+    <div class="col">
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+
+
+</div>
+
+</body>
+</html>

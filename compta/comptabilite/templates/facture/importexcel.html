@@ -1,0 +1,17 @@
+{% block content %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+ 
+
+              <h2>Excel Data Upload</h2>
+
+               
+                    <input type="file" name="myfile" class="form-control">
+                             <button type="submit" class="btn btn-success" >Upload</button>                            
+                            <br/>
+
+  </form>
+
+    
+{% endblock %}

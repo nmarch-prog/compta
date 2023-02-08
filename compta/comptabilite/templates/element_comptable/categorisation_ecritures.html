@@ -1,0 +1,26 @@
+<h2>Catégorisation des écritures</h2>
+
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+<table>
+    {% for f in form.visible_fields%}
+    <tr>
+        <th>
+            {{f.label_tag}}
+        </th>
+        <td>
+            {{f}}
+        </td>
+
+    </tr>
+
+    {% endfor %}
+</table>
+
+
+    <button type="submit">Sauver</button>
+
+
+  </form>
