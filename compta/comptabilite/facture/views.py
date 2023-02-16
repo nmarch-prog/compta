@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import CreateView, FormView, ListView
+from django.views.generic import CreateView, FormView, ListView, TemplateView
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Sum
 from django.http.response import HttpResponse
@@ -13,7 +13,7 @@ from django.core import serializers
 from django.core.files.storage import FileSystemStorage
 import json
 import pandas as pd
-from .utils import creer_maj_facture, creer_echeances, creer_facture_echeance_liees
+from .utils import traitement_form_facture
 import csv
 from django.forms.models import model_to_dict
 import decimal
@@ -21,32 +21,6 @@ import decimal
 # Create your views here.
 
 
-def traitement_form_facture(form, facture):
-
-    # Creer ou maj facture
-    fact = creer_maj_facture(form, facture)
-
-    if form['commercial'] != '': creer_facture_echeance_liees(form, fact, 'commercial')
-    if form['commercial_2'] != '': creer_facture_echeance_liees(form, fact, 'commercial_2')
-    if form['apporteur'] != '': creer_facture_echeance_liees(form, fact, 'apporteur')
-
-    if 'paiement_deja_constate' in form:
-        # Associer element comptable
-        return HttpResponseRedirect('factures/associer_element_comptable/' + str(fact.id))
-    else:
-        creer_echeances(form, fact)
-        # Creer element comptable si facture non future
-        print(form)
-        if not ('future_facture' in form) or form['future_facture']=='':
-            ElementComptable.objects.create(
-                facture=fact,
-                categorie=CategorieComptable.objects.get(id=form['categorie_comptable']),
-                montant=float(form['montant'].replace(',', '.')) if form['type'] == 'emise' \
-                    else -float(form['montant'].replace(',', '.')),
-                date=form['date_emission'],
-            )
-
-    return HttpResponseRedirect('/factures/liste')
 
 
 class TestForm(FormView):
@@ -71,13 +45,20 @@ class TestForm(FormView):
     def post(self, request, *args, **kwargs):
         form = request.POST
         facture = self.kwargs['facture'] if 'facture' in self.kwargs.keys() else None
-        return traitement_form_facture(form, facture)
+        traitement_form_facture(form, facture)
+        return HttpResponseRedirect('/factures/liste')
 
 
 
 
-def echeances_vue(request):
+def echeances_vue(request, **kwargs):
     return render(request, 'facture/testliste.html')
+
+class EchView(TemplateView):
+
+    template_name='facture/testliste.html'
+
+
 
 class EcheancesView(Resource):
 
@@ -149,9 +130,3 @@ class VueEcrituresSansFacture(ListView):
     def get_queryset(self):
         return ElementComptable.objects.filter(facture=None)
 
-
-class VueAssocierElemComptFacture(FormView):
-
-# Mettre directement dans le formulaire une dropdown avec la liste des ecritures sans facture
-    template_name = 'facture/testform.html'
-    form_class = FactureForm

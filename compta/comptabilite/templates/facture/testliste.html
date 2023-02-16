@@ -31,7 +31,6 @@
 
 <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
 
-
 <div class="row p-5">
 <table
         class="table-striped"
@@ -39,7 +38,7 @@
   data-toggle="table"
   data-sort-name="date_recouvrement"
   data-sort-order="asc"
-  data-url="http://127.0.0.1:8000/factures/liste/api/?date=2023-02-10">
+  data-url="http://127.0.0.1:8000/factures/liste/api/?date={{ view.kwargs.date }}">
 
   <thead>
     <tr>

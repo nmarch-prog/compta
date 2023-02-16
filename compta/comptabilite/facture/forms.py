@@ -1,8 +1,8 @@
 from django import forms
 from comptabilite.facture.models import Facture, Echeance
-from comptabilite.element_comptable.models import CategorieComptable
+from comptabilite.element_comptable.models import CategorieComptable, ElementComptable
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Button, Layout, Field, Div, Row
+from crispy_forms.layout import Submit, Button, Layout, Field, Div, Row, Column
 from crispy_forms.bootstrap import TabHolder, Tab
 
 class FactureCategorieForm(forms.ModelForm):
@@ -44,6 +44,8 @@ class FactureForm(forms.Form):
     montant = forms.DecimalField()
     date_recouvrement = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}),  required=False)
     future_facture = forms.BooleanField(initial=False, required=False)
+    ecriture_associee = forms.ModelChoiceField(
+        queryset=ElementComptable.objects.filter(facture=None),  required=False)
     paiement_deja_constate = forms.BooleanField(initial=False, required=False)
     categorie_comptable = forms.ModelChoiceField(queryset=CategorieComptable.objects.all(),  required=False)
 
@@ -99,8 +101,15 @@ class FactureForm(forms.Form):
                 Row('montant', css_class='m-2'),
                 Row('date_recouvrement', css_class='m-2'),
                 Row('future_facture', css_class='m-2'),
-                Row('paiement_deja_constate', css_class='m-2'),
-                Row('categorie_comptable', css_class='m-2')
+                Row(
+                    Column('paiement_deja_constate', css_class='m-2'),
+                    Column('ecriture_associee', css_class='m-2'),
+                    css_class="card bg-light m-2 mb-3",
+                ),
+                Row(
+                    Column('categorie_comptable', css_class='m-2'),
+                    css_class='card bg-light m-2 mb-5',
+                )
             ),
             Div(
                 TabHolder(
@@ -143,7 +152,3 @@ class FactureForm(forms.Form):
             )
         )
 
-
-class AssociationForm(forms.Form):
-
-    pass

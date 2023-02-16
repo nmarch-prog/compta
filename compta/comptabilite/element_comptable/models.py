@@ -14,7 +14,7 @@ class CategorieComptable(models.Model):
 
 class ElementComptable(models.Model):
 
-    ecriture = models.OneToOneField(Ecriture, null=True, blank=True, on_delete=models.CASCADE)
+    ecriture = models.ForeignKey(Ecriture, null=True, blank=True, on_delete=models.CASCADE)
     facture = models.ForeignKey(Facture, null=True, blank=True, on_delete=models.CASCADE)
     categorie = models.ForeignKey(CategorieComptable, on_delete=models.CASCADE)
     montant = models.DecimalField(max_digits=8, decimal_places=2)
