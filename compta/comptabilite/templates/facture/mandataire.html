@@ -1,0 +1,13 @@
+<h1>Facture {{view.kwargs.mandataire}} {{view.kwargs.mois}}</h1>
+  {% if object_list %}
+  <table>
+    {% for ech in object_list %}
+      <tr>
+        <td>{{ech.facture.client}}:</td> <td>{{ech.montant}}</td>
+      </tr>
+    {% endfor %}
+    <tr><td>Total</td><td>{{total}}</td> </tr>
+  </table>
+  {% else %}
+    <p>Pas de facturation prévue</p>
+  {% endif %}

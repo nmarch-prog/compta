@@ -38,11 +38,13 @@ class EcheanceFactureSimple(forms.ModelForm):
 class FactureForm(forms.Form):
 
     type = forms.ChoiceField(choices=[('emise', 'emise'), ('recue', 'recue')])
-    emetteur_ou_client = forms.CharField(max_length=50)
+    emetteur = forms.CharField(max_length=50)
+    client = forms.CharField(max_length=50,  required=False)
     date_emission = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     montant = forms.DecimalField()
-    date_recouvrement = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+    date_recouvrement = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}),  required=False)
     future_facture = forms.BooleanField(initial=False, required=False)
+    paiement_deja_constate = forms.BooleanField(initial=False, required=False)
     categorie_comptable = forms.ModelChoiceField(queryset=CategorieComptable.objects.all(),  required=False)
 
     fichier = forms.FileField(required=False)
@@ -66,7 +68,24 @@ class FactureForm(forms.Form):
 
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        self.fact_id = kwargs.pop('facture') if 'facture' in kwargs.keys() else None
+        self.echeances = kwargs.pop('echeances') if 'echeances' in kwargs.keys() else None
+        self.montant = kwargs.pop('montant') if 'montant' in kwargs.keys() else None
+        self.date_recouv = kwargs.pop('date_recouvrement') if 'date_recouvrement' in kwargs.keys() else None
+        super(FactureForm, self).__init__(*args, **kwargs)
+        if self.fact_id:
+            facture = Facture.objects.get(id=self.fact_id)
+            self.fields['type'].initial=facture.type
+            self.fields['emetteur'].initial = facture.emetteur
+            self.fields['client'].initial = facture.client
+            self.fields['date_emission'].initial = facture.date_emission
+            self.fields['future_facture'].initial = facture.future_facture
+            #self.fields['facture_liee'].initial = facture.facture_liee
+            self.fields['periodicite'].initial = facture.periodicite
+            self.fields['premiere_date'].initial = facture.date_debut
+            self.fields['date_fin'].initial = facture.date_fin
+            self.fields['montant'].initial = -self.montant if facture.type=='recue' else self.montant
+            self.fields['date_recouvrement'].initial = self.date_recouv
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-md-2'
@@ -74,11 +93,13 @@ class FactureForm(forms.Form):
         self.helper.layout = Layout(
             Div(
                 Row('type', css_class='m-2'),
-                Row('emetteur_ou_client', css_class='m-2'),
+                Row('emetteur', css_class='m-2'),
+                Row('client', css_class='m-2'),
                 Row('date_emission', css_class='m-2'),
                 Row('montant', css_class='m-2'),
                 Row('date_recouvrement', css_class='m-2'),
                 Row('future_facture', css_class='m-2'),
+                Row('paiement_deja_constate', css_class='m-2'),
                 Row('categorie_comptable', css_class='m-2')
             ),
             Div(
@@ -123,9 +144,6 @@ class FactureForm(forms.Form):
         )
 
 
+class AssociationForm(forms.Form):
 
-
-
-
-
-
+    pass
