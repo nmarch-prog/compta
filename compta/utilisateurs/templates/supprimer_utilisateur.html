@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table>
+
+    <div>Etes vous sûr de vouloir supprimer {{object.user.username}} </div>
+
+    <form method="POST" action=".">
+        {% csrf_token %}
+
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <table>{{form.as_table}}</table>
+        <P></P>
+        <button type="submit">Effacer</button>
+    </form>
+
+</table>
+
+{% endblock content %}

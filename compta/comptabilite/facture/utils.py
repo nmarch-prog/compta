@@ -1,5 +1,5 @@
 from .models import Facture, Echeance
-from comptabilite.element_comptable.models import ElementComptable
+from comptabilite.element_comptable.models import ElementComptable, CategorieComptable
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 
@@ -15,6 +15,7 @@ def creer_maj_facture(formdata, facture):
         'periodicite': formdata['periodicite'],
         'date_debut': formdata['premiere_date'] if formdata['premiere_date'] != '' else None,
         'date_fin': formdata['date_fin'] if formdata['date_fin'] != '' else None,
+        'plusieurs_ecritures': True if hasattr(formdata, 'plusieurs_ecritures') else False,
     }
 
     # Crée ou met à jour l'objet facture

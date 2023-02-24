@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<table>
+
+<tr>
+
+  <td>Utilisateurs</td>
+
+</tr>
+    <tr><td><br></td></tr>
+
+    {% for u in users %}
+<tr>
+
+    <td>{{u}}</td> </tr>
+
+    {% endfor %}
+<tr><td><br></td></tr>
+  <tr><td>
+      Les utilisateurs sont gérés directement dans admin, y compris la création et le reset des mots de passe</td></tr>
+<tr><td><br></td></tr>
+<tr><td><br></td></tr>
+
+<tr><td>Collaborateurs</td></tr>
+
+
+
+  {% for u in collaborateurs %}
+<tr>
+    <td>
+  <a href="{% url 'utilisateurs:editer-collab' u.id %}">{{u}}</a></td>
+    <td><a href="{% url 'utilisateurs:editer-collab' u.id %}">
+        <img src="{% static 'crayon.png' %}" width="25"></a></td>
+    <td><a href="{% url 'utilisateurs:supprimer-collab' u.id %}">
+    <img src="{% static 'poubelle.png' %}" width="25"></td>
+</tr>
+
+    {% endfor %}
+    <tr><td><a href="{% url 'utilisateurs:creer-collab' %}">Créer un collaborateur</a></td></tr>
+
+<tr><td><br></td></tr>
+<tr><td><br></td></tr>
+
+    <tr><td>Courtiers</td></tr>
+
+    {% for u in courtiers %}
+<tr>
+    <td>
+  <a href="{% url 'utilisateurs:editer-courtier' u.id %}">{{u}}</a></td>
+    <td><a href="{% url 'utilisateurs:editer-courtier' u.id %}">
+        <img src="{% static 'crayon.png' %}" width="25"></a></td>
+    <td><a href="{% url 'utilisateurs:supprimer-courtier' u.id %}">
+    <img src="{% static 'poubelle.png' %}" width="25"></td>
+</tr>
+
+    {% endfor %}
+    <tr><td><a href="{% url 'utilisateurs:creer-courtier' %}">Créer un courtier</a></td></tr>
+
+
+</table>
+
+{% endblock content %}

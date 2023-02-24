@@ -77,15 +77,16 @@ class EcheancesView(Resource):
         l2 = sorted(l, key=lambda d: d['date_recouvrement'])
         somme=0
         for l in l2:
-            somme += l['montant']
+            somme += l['montant'] if l['montant'] else 0
             l['total'] = "{:.2f}".format(somme)
-            l['montant'] = "{:.2f}".format(l['montant'])
+            l['montant'] = "{:.2f}".format(l['montant']) if l['montant'] else 0
         return {'total': len(l2), 'rows': l2}
 
     def get(self, request):
         echeances = Echeance.objects.all() \
             .filter(date_recouvrement__gte = request.GET.get('date')).order_by('date_recouvrement')
-        res = self.regroupement(echeances, ['ACTI', 'Elan'], ['2023-02-20'])
+        res = self.regroupement(echeances, ['ACTI', 'Elan'], ['2023-03-20'])
+
         return JsonResponse(res, safe=False)
 
 

@@ -10,11 +10,13 @@ class Facture(models.Model):
     client = models.CharField(max_length=50, null=True, blank=True)
     date_emission = models.DateField(null=True, blank=True)
     fichier = models.FileField(null=True, blank=True)
-    # Facture n'ayant pas en entrer en comptabilité (servie non encore fourni)
+    # Facture n'ayant pas en entrer en comptabilité (service non encore fourni)
     # Pour les échéancier, une échéance rentrerea en compta avec les ecritures des comptes
     future_facture = models.BooleanField(null=True, blank=True)
     # Si la facture dépend d'une autre, par exemple com apporteur
     facture_liee = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+    # Si plusieurs ecritures se rapportent à cette facture
+    plusieurs_ecritures = models.BooleanField(null=True, blank=True)
     # Si la facture est un échéancier
     periodicite = models.CharField(max_length=50,
                                    choices=[('aucune', 'aucune'), ('mensuel', 'mensuel'), ('trimestriel', 'trimestriel')],

@@ -19,8 +19,33 @@
     {% endfor %}
 </table>
 
+</form>
 
-    <button type="submit">Sauver</button>
+<table>
+    <form method="post" enctype="multipart/form-data">
+    {{ formset.management_form }}
+        {% csrf_token %}
+        <table>
+
+        {% for form, ecr in zip %}
+        <tr>
+            <td>{{ecr.date_valeur}}</td>
+            <td>{{ecr.libelle}}</td>
+            <td>{{ecr.credit}}</td>
+            <td>{{ecr.debit}}</td>
+            <td>{{ form.hors_compta }}</td>
+            <td>{{ form.categorie_comptable }}</td>
+            <td>{{ form.facture }}</td>
+        </tr>
+
+        {% endfor %}
+    </table>
+        <button type="submit" >Save</button>
+    </form>
+</table>
+
+
+
 
 
   </form>

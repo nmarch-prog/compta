@@ -1,26 +1,20 @@
 from .models import ElementComptable, CategorieComptable
 from comptabilite.ecriture.models import Ecriture
+from comptabilite.facture.models import Facture
 from django import forms
-
-class EcrituresNonComptabiliseesForm(forms.Form):
-
-    def __init__(self, *args, **kwargs):
-        liste = kwargs.pop('liste')
-        super(EcrituresNonComptabiliseesForm, self).__init__(*args, **kwargs)
-        for e in liste:
-            self.fields[e[0]] = forms.IntegerField(required=False, widget=forms.HiddenInput())
-            self.fields[e[1]] = forms.ModelChoiceField(queryset=CategorieComptable.objects.all())
+from django.db.models import Q
 
 
-class EcrituresNonComptabiliseesFacturesForm(forms.Form):
+class BaseEcrituresForm(forms.Form):
 
-    def __init__(self, *args, **kwargs):
-        liste = kwargs.pop('liste')
-        factures = kwargs.pop('factures')
-        super(EcrituresNonComptabiliseesFacturesForm, self).__init__(*args, **kwargs)
-        for e in liste:
-            self.fields[e[0]] = forms.IntegerField(required=False, widget=forms.HiddenInput())
-            self.fields[e[1]] = forms.ModelChoiceField(queryset=factures)
+    hors_compta = forms.BooleanField()
+    categorie_comptable = forms.ModelChoiceField(queryset=CategorieComptable.objects.all())
+    facture = forms.ModelChoiceField(queryset=Facture.objects.filter(
+        Q(id__in=ElementComptable.objects.filter(ecriture=None).values_list('facture'))\
+        | Q(plusieurs_ecritures=True))
+    )
+
+
 
 
 

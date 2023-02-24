@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table>
+
+    <form method="POST" action=".">
+        {% csrf_token %}
+
+        <input type="hidden" >
+        <table>{{form.as_table}}</table>
+        <P></P>
+        <button type="submit">Soumettre</button>
+    </form>
+
+</table>
+
+{% endblock content %}

@@ -43,8 +43,9 @@ class FactureForm(forms.Form):
     date_emission = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     montant = forms.DecimalField()
     date_recouvrement = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}),  required=False)
+    plusieurs_ecritures = forms.BooleanField(initial=False, required=False)
     future_facture = forms.BooleanField(initial=False, required=False)
-    ecriture_associee = forms.ModelChoiceField(
+    ecriture_associee = forms.ModelMultipleChoiceField(
         queryset=ElementComptable.objects.filter(facture=None),  required=False)
     paiement_deja_constate = forms.BooleanField(initial=False, required=False)
     categorie_comptable = forms.ModelChoiceField(queryset=CategorieComptable.objects.all(),  required=False)
@@ -81,6 +82,7 @@ class FactureForm(forms.Form):
             self.fields['emetteur'].initial = facture.emetteur
             self.fields['client'].initial = facture.client
             self.fields['date_emission'].initial = facture.date_emission
+            self.fields['plusieurs_ecritures'].initial = facture.plusieurs_ecritures
             self.fields['future_facture'].initial = facture.future_facture
             #self.fields['facture_liee'].initial = facture.facture_liee
             self.fields['periodicite'].initial = facture.periodicite
@@ -100,6 +102,7 @@ class FactureForm(forms.Form):
                 Row('date_emission', css_class='m-2'),
                 Row('montant', css_class='m-2'),
                 Row('date_recouvrement', css_class='m-2'),
+                Row('plusieurs_ecritures', css_class='m-2'),
                 Row('future_facture', css_class='m-2'),
                 Row(
                     Column('paiement_deja_constate', css_class='m-2'),

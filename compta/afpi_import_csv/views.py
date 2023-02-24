@@ -95,6 +95,7 @@ class ImportCsvView(FormView):
                         )
                     else:
                         r[self.intitule_type_fichier] = type_fichier
+                print(r)
                 self.model_class.objects.create(**r)
 
         return flag, cols_manquantes, doublons
