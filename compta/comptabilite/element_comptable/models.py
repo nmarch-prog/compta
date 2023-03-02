@@ -6,7 +6,7 @@ from comptabilite.facture.models import Facture
 
 class CategorieComptable(models.Model):
 
-    intitule = models.CharField(max_length=20)
+    intitule = models.CharField(max_length=40)
     no_compta = models.IntegerField()
 
     def __str__(self):
@@ -16,7 +16,7 @@ class ElementComptable(models.Model):
 
     ecriture = models.ForeignKey(Ecriture, null=True, blank=True, on_delete=models.CASCADE)
     facture = models.ForeignKey(Facture, null=True, blank=True, on_delete=models.CASCADE)
-    categorie = models.ForeignKey(CategorieComptable, on_delete=models.CASCADE)
+    categorie = models.ForeignKey(CategorieComptable, on_delete=models.CASCADE, related_name='categorieelem')
     montant = models.DecimalField(max_digits=8, decimal_places=2)
     date = models.DateField(blank=True, null=True)
 

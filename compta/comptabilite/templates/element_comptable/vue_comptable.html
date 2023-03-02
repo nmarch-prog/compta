@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comptabilite</title>
+</head>
+<body>
+<table>
+    {% for e in object_list%}
+    {% if e.total > 0 %}
+    <tr>
+        <td>{{e.intitule}}</td>
+        <td>{{e.total}}</td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    <tr>
+        <td>Total crédits</td>
+        <td>{{credit}}</td>
+    </tr>
+    <td><p></p></td>
+    <tr>
+    </tr>
+        {% for e in object_list%}
+        {% if e.total < 0 %}
+        <tr>
+            <td>{{e.intitule}}</td>
+            <td>{{e.total}}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+
+    <tr>
+        <td>Total débits</td>
+        <td>{{debit}}</td>
+    </tr>
+
+    <tr><td><p></p></td></tr>
+    <tr><td>Total</td><td>{{total}}</td></tr>
+
+
+</table>
+
+
+
+
+
+
+</body>
+</html>

@@ -27,7 +27,21 @@
         {% csrf_token %}
         <table>
 
+        <tr>
+            <th>Date</th>
+            <th>Libellé</th>
+            <th>Crédit</th>
+            <th>Débit</th>
+            <th>Hors compta</th>
+            <th>Catégorie comptable</th>
+            <th>Facture</th>
+            <th>Plusieurs factures</th>
+
+        </tr>
+
         {% for form, ecr in zip %}
+
+
         <tr>
             <td>{{ecr.date_valeur}}</td>
             <td>{{ecr.libelle}}</td>

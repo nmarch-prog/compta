@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView
 from django.forms import formset_factory
+from django.db.models import Q, Sum, Value
 from .forms import BaseEcrituresForm
 from comptabilite.ecriture.models import Ecriture
 from comptabilite.facture.models import Facture
@@ -16,6 +17,10 @@ def get_cat_comptable(req, i):
     id = req.POST['form-' + str(i) + '-categorie_comptable']
     return CategorieComptable.objects.get(id=id)
 
+def get_facture(req, i):
+    id = req.POST['form-' + str(i) + '-facture']
+    return Facture.objects.get(id=id)
+
 
 class EcrituresNonComptabiliseesView(FormView):
     # 2e etape de l'insertion des ecritures, si pas de facture présente on categorise
@@ -29,7 +34,6 @@ class EcrituresNonComptabiliseesView(FormView):
         ecr = [e for e  in Ecriture.objects.exclude(
             id__in=[e[0] for e in ElementComptable.objects.all().values_list('ecriture')]).
                     exclude(hors_compta=True)]
-        print(ecr)
         fs = formset_factory(BaseEcrituresForm, extra=len(ecr))
         context = {
             'formset': fs,
@@ -42,6 +46,7 @@ class EcrituresNonComptabiliseesView(FormView):
         ecr = [e for e in Ecriture.objects.exclude(
             id__in=[e[0] for e in ElementComptable.objects.all().values_list('ecriture')]).
                     exclude(hors_compta=True)]
+        elem_compta_multiples=[]
         for i, e in zip(range(0, int(request.POST['form-TOTAL_FORMS'])), ecr):
             if request.POST.get('form-' + str(i) + '-hors_compta')!=None:
                 e.hors_compta = True
@@ -57,7 +62,16 @@ class EcrituresNonComptabiliseesView(FormView):
             if request.POST['form-' + str(i) + '-facture']!='':
                 # Lier l'écriture à l'élément comptable existant lié à la facture
                 # Problème si facture avec plusieurs elements comptables
+                e2 = ElementComptable.objects.filter(facture=get_facture(request, i))
+                if e2.count()>1:
+                    elem_compta_multiples.append(e, e2)
+                else:
+                    e2 = e2.get()
+                    e2.ecriture = e
+                    e2.save()
                 continue
+
+        return render(request, 'element_comptable/categorisation_ecritures.html')
 
 
 
@@ -87,4 +101,29 @@ class EcrituresNonComptabiliseesFacturesView(FormView):
         return render(self.request, 'element_comptable/categorisation_ecritures.html')
 
 
+class ComptaMensuelleView(ListView):
+
+    template_name = 'element_comptable/vue_comptable.html'
+
+    def get_queryset(self):
+        mois = int(self.kwargs['mois'].split('-')[1])
+        annee = int(self.kwargs['mois'].split('-')[0])
+        ec = ElementComptable.objects.filter(
+            Q(date__month=mois) & Q(date__year=annee))
+        total = ec.aggregate(sum=Sum('montant'))['sum']
+        credit = ec.filter(montant__gte=0).aggregate(sum=Sum('montant'))['sum']
+        debit = ec.filter(montant__lte=0).aggregate(sum=Sum('montant'))['sum']
+        qs = CategorieComptable.objects.filter(Q(categorieelem__date__month=mois) & Q(categorieelem__date__year=annee)).annotate(
+            total=Sum('categorieelem__montant')).annotate(
+            resultat=Value(total) if total!=None else Value(0),
+            credit=Value(credit) if credit!=None else Value(0),
+            debit=Value(debit)) if debit!=None else Value(0)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total']=self.object_list.aggregate(sum=Sum('total'))['sum']
+        context['credit']=self.object_list.filter(total__gte=0).aggregate(sum=Sum('total'))['sum']
+        context['debit']=self.object_list.filter(total__lte=0).aggregate(sum=Sum('total'))['sum']
+        return context
 

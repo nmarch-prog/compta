@@ -96,8 +96,9 @@ def traitement_form_facture(form, facture):
 
     if 'paiement_deja_constate' in form:
         # Associer element comptable
-        ElementComptable.objects.get(id=form['categorie_comptable']).facture = fact
-        ElementComptable.objects.get(id=form['categorie_comptable']).save()
+        e = ElementComptable.objects.get(id=int(form['ecriture_associee']))
+        e.facture = fact
+        e.save()
     else:
         creer_echeances(form, fact)
         # Creer element comptable si facture non future
